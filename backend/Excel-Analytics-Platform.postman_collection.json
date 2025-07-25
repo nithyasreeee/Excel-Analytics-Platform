@@ -1,0 +1,251 @@
+{
+  "info": {
+    "name": "Excel Analytics Platform",
+    "description": "Complete API collection for Excel Analytics Platform",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/user/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "user", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "    console.log('Token saved:', response.token.substring(0, 20) + '...');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Excel Files",
+      "item": [
+        {
+          "name": "Upload Excel File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "excelFile",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/excel/upload",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "excel", "upload"]
+            }
+          }
+        },
+        {
+          "name": "Get User Files",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/excel/files",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "excel", "files"]
+            }
+          }
+        },
+        {
+          "name": "Get File Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/excel/files/FILE_ID/data?sheetName=Sheet1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "excel", "files", "FILE_ID", "data"],
+              "query": [
+                {
+                  "key": "sheetName",
+                  "value": "Sheet1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete File",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/excel/files/FILE_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "excel", "files", "FILE_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Create Analysis",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileId\": \"FILE_ID_HERE\",\n  \"analysisType\": \"summary\",\n  \"name\": \"Sales Data Summary\",\n  \"description\": \"Summary analysis of sales data\",\n  \"config\": {\n    \"sheetName\": \"Sheet1\",\n    \"columns\": [\"Product\", \"Sales\", \"Revenue\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "analytics", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get User Analyses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "analytics"]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Analysis",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/analytics/ANALYSIS_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "analytics", "ANALYSIS_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test Endpoints",
+      "item": [
+        {
+          "name": "Test Server",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/test",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
