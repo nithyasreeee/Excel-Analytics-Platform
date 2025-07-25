@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const authRoutes = require('./routers/authRoutes');
+const userRoutes = require('./routers/userRoutes');
 const excelRoutes = require('./routers/excelRoutes');
 const analyticsRoutes = require('./routers/analyticsRoutes');
 const cors = require('cors');
@@ -13,7 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/user', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/excel', excelRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
